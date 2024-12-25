@@ -4,10 +4,13 @@ import { DatePickerDemo } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { EditorState } from 'draft-js'; // Import EditorState
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'; // Import styles for the editor
+import { Image } from 'lucide-react';
+import { useDropzone } from 'react-dropzone'
+
 
 const CreateProjects = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Initialize editor state
@@ -15,6 +18,12 @@ const CreateProjects = () => {
     const onHandleDescription = (state) => {
         setEditorState(state); // Update editor state
     };
+
+
+    const onDrop = useCallback(acceptedFiles => {
+        // Do something with the files
+    }, [])
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     return (
         <div className="grid md:px-10 px-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-5">
@@ -91,6 +100,21 @@ const CreateProjects = () => {
             <div className="grid w-full items-center gap-1.5 md:col-span-1 lg:col-span-1">
                 <Label htmlFor="client">Client Name</Label>
                 <Input type="text" id="client" placeholder="Enter Client Name" />
+            </div>
+
+            <div className="grid w-full max-w-full items-center gap-1.5 lg:col-span-3">
+                <Label htmlFor="Project">Files</Label>
+                <div {...getRootProps()} className='w-full shadow py-10 rounded-lg flex flex-col justify-center items-center gap-2'>
+                    <input {...getInputProps()} />
+                    <Image />
+                    <p className='text-sm text-gray-400'>
+                    {
+        isDragActive ?
+          <p>Drop the files here ...</p> :
+          <p>Drag 'n' drop some files here, or click to select files</p>
+      }
+                    </p>
+                </div>
             </div>
 
             {/* PROJECT DESCRIPTION */}
